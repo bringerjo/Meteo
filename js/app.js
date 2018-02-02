@@ -1,74 +1,39 @@
 (function main(){
-var xhr=createXHR();	
-$('#mybtn').on('click',function(){
-	//getJson();
-	getJqAjax();
-})
-function getJqAjax(){
-	var mylat = $('#mylat').val();
-	var mylng = $('#mylng').val();
-	$.ajax({
-		url:"https://www.prevision-meteo.ch/services/json/lat="+ mylat +"lng="+mylng+"",
-		datatype:'json',
-		success: function(data){
-			console.log("success");
-			console.log(data.fcst_day_0.condition)
-		},
-		error: function(){
-			console.log("no way, i'm fucked");
-		}
-	})
-}
-function getJson(){
-	var mylat = $('#mylat').val();
-	var mylng = $('#mylng').val();
 
-	var myurl = "https://www.prevision-meteo.ch/services/json/lat="+ mylat +"lng="+mylng;
-	//var myurl = "http://www.geobi.fr/dev/googleplace/places.php?lat="+ mylat +"&lon="+mylng+"&type=pharmacy&radius=10000";
-	//"http://www.geobi.fr/dev/googleplace/places.php?lat=44.334862&lon=2.435056&type=pharmacy&radius=10000"
-	var objJSON;
-	
-	xhr.open("GET", myurl,true);
+$('.btn').click(function(){
+	var ville = $('.input1').val();
+	//var lon = data.coord.lon;
+	//var lat = data.coord.lat;
 
-	xhr.onreadystatechange=function()
-	{
-				
-		if (xhr.readyState == 4) 
-		{
-			if (xhr.status != 404) 
-			{
-				var maMeteo=eval("(" + xhr.responseText + ")");
-				var myDiv = $('#meteo');
-				var contenu ="";
-				//var contenu = maMeteo.
-				var myCondition = maMeteo.fcst_day_0.condition;
-				alert(mycondition);
-			}
-		}
-	}
-	xhr.send(null);
-}
+	if(ville != ""){
+		$.ajax({
+			url : "https://api.openweathermap.org/data/2.5/weather?q="+ ville + "&lang=fr" +"&units=metric"+"&APPID=d61362690139c0a87c76ea71d0d1b92f",
+			dataType:"json",
+			success: function(data){
+						console.log("hello");
+						console.log(data);
+						var widget = show(data);
+						$(".box").html(widget);
+						$(".input1").val('');
+						$(".error").hide();
+					},
+			});
+	}else{
+		$(".error").html("L'élément saisi n'est pas une ville !");
+	}//fin if...else	
 
-function createXHR() 
-{
-    var request = false;
-        try {
-            request = new ActiveXObject('Msxml2.XMLHTTP');
-        }
-        catch (err2) {
-            try {
-                request = new ActiveXObject('Microsoft.XMLHTTP');
-            }
-            catch (err3) {
-		try {
-			request = new XMLHttpRequest();
-		}
-		catch (err1) 
-		{
-			request = false;
-		}
-            }
-        }
-    return request;
-}
-})();
+function show(data){
+	return  "<h3>Météo à " + data.name + ", " + data.sys.country + "</h3>" +
+			"<h3>Ciel: <img src='http://openweathermap.org/img/w/" + data.weather[0].icon + ".png'> " + data.weather[0].description + "</h3>" +
+			"<h3>Température: " + data.main.temp + "</h3>" +
+			"<h3>pression: " + data.main.pressure + "</h3>" +
+			"<h3>Humiditée: " + data.main.humidity + "</h3>" +
+			"<h3>Min. Temperature: " + data.main.temp_min + "</h3>" +
+			"<h3>Max. Temperature: " + data.main.temp_max + "</h3>" +
+			"<h3>Vitesse vent: " + data.wind.speed + "</h3>" ;
+			};
+
+});//ferme click
+
+})();//ferme main
+
