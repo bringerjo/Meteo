@@ -3,6 +3,7 @@ body {
 	background-size: cover;
 	font-size: 18px;
 	margin: auto; 
+	background-attachment: fixed;
 }
 
 h1 {
@@ -78,14 +79,6 @@ input {
 
 h3 {
 	font-weight: bold;
-}
-
-footer {
-	color: white;
-	font-family: 'Risque', cursive;
-	display: flex;
-	margin-left: 3em;
-	margin-top: 2em;
 }
 
 input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
